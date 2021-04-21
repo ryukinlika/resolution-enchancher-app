@@ -3,6 +3,7 @@ package id.ac.umn.esrganapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
@@ -30,7 +31,25 @@ public class MainActivity extends AppCompatActivity {
     Button btn;
     ImageView imgView;
     Bitmap bm, bitmap;
+    private Bitmap getOutputImage(ByteBuffer output){
+        output.rewind();
 
+        int outputWidth = 200;
+        int outputHeight = 200;
+        Bitmap bitmap = Bitmap.createBitmap(outputWidth, outputHeight, Bitmap.Config.ARGB_8888);
+        int [] pixels = new int[outputWidth * outputHeight];
+        for (int i = 0; i < outputWidth * outputHeight; i++) {
+            int a = 0xFF;
+
+            float r = output.getFloat() ;
+            float g = output.getFloat() ;
+            float b = output.getFloat() ;
+
+            pixels[i] = a << 24 | ((int) r << 16) | ((int) g << 8) | (int) b;
+        }
+        bitmap.setPixels(pixels, 0, outputWidth, 0, 0, outputWidth, outputHeight);
+        return bitmap;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
         imgView.invalidate();
         BitmapDrawable drawable = (BitmapDrawable) imgView.getDrawable();
         bm = drawable.getBitmap();
-
         CustomModelDownloadConditions conditions = new CustomModelDownloadConditions.Builder()
                 .requireWifi()  // Also possible: .requireCharging() and .requireDeviceIdle()
                 .build();
@@ -72,10 +90,13 @@ public class MainActivity extends AppCompatActivity {
                     for (int x = 0; x < 50; x++) {
                         int px = bitmap.getPixel(x, y);
 
+
+
                         // Get channel values from the pixel value.
                         float rf = Color.red(px);
                         float gf = Color.green(px);
                         float bf = Color.blue(px);
+
 
                         input.putFloat(rf);
                         input.putFloat(gf);
@@ -89,8 +110,8 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("test", "after interpreter run");
 
                 modelOutput.rewind();
-                Bitmap bitmap_output = Bitmap.createBitmap(200,200, Bitmap.Config.ARGB_8888);
-                bitmap_output.copyPixelsFromBuffer(modelOutput);
+                Bitmap bitmap_output;
+                bitmap_output = getOutputImage(modelOutput);
                 imgView.setImageBitmap(bitmap_output);
                 Log.d("test", "set bitmap to output");
 
