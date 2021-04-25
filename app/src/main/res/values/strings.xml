@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">PoggersEsrgan</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Image Enhancer</string>
+    <string name="nav_header_subtitle">by Poggers</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Recent Images</string>
+    <string name="menu_about">Learn More</string>
+    <string name="menu_floating">Start Enhancing now</string>
 </resources>
