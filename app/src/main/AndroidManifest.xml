@@ -20,16 +20,24 @@
 
         <activity android:name=".EnhanceActivity"
             android:parentActivityName=".MainActivity">
-
         </activity>
 
-        <activity android:name=".SplashActivity"
-            >
+        <activity android:name=".OnboardingActivity">
+            android:name=".OnboardingActivity"
+            android:label="OnboardingActivity"
+            android:theme="@style/Theme.PoggersEsrgan.NoActionBar"
+        </activity>
+
+        <activity android:name=".SplashActivity" android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>
