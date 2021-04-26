@@ -19,6 +19,10 @@
         </activity>
 
         <activity android:name=".EnhanceActivity"
+            android:parentActivityName=".EnhanceOptionActivity">
+        </activity>
+
+        <activity android:name=".EnhanceOptionActivity"
             android:parentActivityName=".MainActivity">
         </activity>
 
