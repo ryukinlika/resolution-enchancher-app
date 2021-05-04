@@ -32,23 +32,26 @@ public class OnboardingActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide(); //<< this
+        //hide action bar
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_onboarding);
 
+        //get Variables
         mSlide = (ViewPager) findViewById(R.id.slideView);
         mDotLayer = (LinearLayout) findViewById(R.id.dots);
-
         back = findViewById(R.id.btn_back);
         next = findViewById(R.id.btn_next);
 
-        slider = new Slider(this);
-
-        mSlide.setAdapter(slider);
-
+        //Initialize variable for mDot (dots to indicate which page)
         addDotsIndicator(0);
+
+        //Connects the slider activity to this activity
+        slider = new Slider(this);
+        mSlide.setAdapter(slider);
 
         mSlide.addOnPageChangeListener(viewListener);
 
+        //Next button function. If mcurr==2 (last page), go to MainActivity. Else go to next page
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,12 +63,18 @@ public class OnboardingActivity extends AppCompatActivity{
             }
         });
 
+        //Go to
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mSlide.setCurrentItem(mCurr-1);
             }
         });
+
+        //Remove back button onload
+        back.setEnabled(false);
+        back.setVisibility(View.INVISIBLE);
+        back.setText("");
     }
 
     public void addDotsIndicator(int position){
@@ -85,6 +94,8 @@ public class OnboardingActivity extends AppCompatActivity{
             mDots[position].setTextColor(Color.parseColor("#FFFFFF"));
         }
     }
+
+
 
     ViewPager.OnPageChangeListener viewListener = new ViewPager.OnPageChangeListener() {
         @Override

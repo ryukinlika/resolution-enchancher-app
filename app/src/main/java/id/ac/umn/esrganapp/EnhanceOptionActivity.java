@@ -22,6 +22,7 @@ public class EnhanceOptionActivity extends AppCompatActivity {
         gallerybtn = findViewById(R.id.folderbtn);
         photobtn = findViewById(R.id.photobtn);
 
+        //go to page if clicked
         gallerybtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -30,6 +31,7 @@ public class EnhanceOptionActivity extends AppCompatActivity {
             }
         });
 
+        //go to page if clicked
         photobtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
