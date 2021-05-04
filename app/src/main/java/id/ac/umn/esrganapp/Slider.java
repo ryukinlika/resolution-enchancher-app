@@ -24,19 +24,19 @@ public class Slider extends PagerAdapter {
     }
 
     public int[] slide_images={
-      R.drawable.app_logo, R.drawable.app_logo, R.drawable.app_logo
+      R.drawable.camera, R.drawable.insect_comparison, R.drawable.app_logo
     };
 
     public String[] slide_headings={
-      "Image Enhancement",
-            "ESRGAN",
-            "Poggers"
+      "Low Cost, High Quality",
+            "Improvize your photo",
+            "Socialize"
     };
 
     public String[] slide_bodys={
-      "Improving the quality and information content of original data, applied to remote sensing data to improve of an image human visual analysis",
-            "The Enhanced Super Resolution Generative Adversarial Networks, image Super Resolution (SR) techniques reconstruct a Higher Resolution (HR) image or sequence from the observed Lower Resolution (LR) images",
-            "Lorem ipsum"
+            "No need to buy high quality camera now!",
+            "ERSGAN improves your photo quality by four times!",
+            "Share your photo and see other high resolution photos that people took"
     };
 
 
