@@ -19,20 +19,24 @@ public class Slider extends PagerAdapter {
     Context context;
     LayoutInflater layoutInflater;
 
+    //initialize Slider
     public Slider(Context context){
         this.context = context;
     }
 
+    //set image for slider
     public int[] slide_images={
       R.drawable.camera, R.drawable.insect_comparison, R.drawable.app_logo
     };
 
+    //set heading for slider
     public String[] slide_headings={
       "Low Cost, High Quality",
             "Improvize your photo",
             "Socialize"
     };
 
+    //set body for slider
     public String[] slide_bodys={
             "No need to buy high quality camera now!",
             "ERSGAN improves your photo quality by four times!",
@@ -46,11 +50,13 @@ public class Slider extends PagerAdapter {
         return slide_headings.length;
     }
 
+    //return object from this
     @Override
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
         return view == (RelativeLayout) object;
     }
 
+    //initialize and set image, heading, and body to slide_onboarding layout
     @Override
     public Object instantiateItem(ViewGroup container, int position){
         layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);

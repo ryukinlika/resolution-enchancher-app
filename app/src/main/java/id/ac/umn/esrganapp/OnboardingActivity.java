@@ -77,8 +77,11 @@ public class OnboardingActivity extends AppCompatActivity{
         back.setText("");
     }
 
+    //create dots for slider
     public void addDotsIndicator(int position){
+        //initialize 3 dots
         mDots = new TextView[3];
+        //remove dot ; so that the dots do not accumulate when user click next or back button
         mDotLayer.removeAllViews();
 
         for (int i = 0;i<mDots.length;i++){
@@ -103,6 +106,8 @@ public class OnboardingActivity extends AppCompatActivity{
 
         }
 
+        //to see where the position at
+        //logic for back, next, and finish button
         @Override
         public void onPageSelected(int position) {
             addDotsIndicator(position);
