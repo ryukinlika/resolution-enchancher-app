@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -80,9 +81,12 @@ public class EnhanceOptionActivity extends AppCompatActivity {
                 if(ContextCompat.checkSelfPermission(v.getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED) {
                     requestPermissions(new String[] { Manifest.permission.CAMERA }, 100);
                 } else {
-                    startActivityForResult(takePictureIntent, PERMISSION_CODE);
+                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(cameraIntent, PERMISSION_CODE);
                 }
                 photoimg = true;
+                if (photoimg)
+                    Log.d("photoimgnya", "true");
             }
         });
 
@@ -128,6 +132,24 @@ public class EnhanceOptionActivity extends AppCompatActivity {
         }
     }
 
+    //resizing bitmap or image that taken with a camaera
+    public Bitmap resizeBitmap(Bitmap getBitmap, int maxSize) {
+        int width = getBitmap.getWidth();
+        int height = getBitmap.getHeight();
+        double x;
+
+        if (width >= height && width > maxSize) {
+            x = width / height;
+            width = maxSize;
+            height = (int) (maxSize / x);
+        } else if (height >= width && height > maxSize) {
+            x = height / width;
+            height = maxSize;
+            width = (int) (maxSize / x);
+        }
+        return Bitmap.createScaledBitmap(getBitmap, width, height, false);
+    }
+
     //handle result of picked image
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -137,9 +159,11 @@ public class EnhanceOptionActivity extends AppCompatActivity {
             gambar.setImageURI(data.getData());
             chooseimg = false;
         }
-        else if (resultCode == RESULT_OK && requestCode == IMAGE_CODE && photoimg) {
+        else if (resultCode == RESULT_OK && requestCode == PERMISSION_CODE && photoimg) {
+            Log.d("Asd", String.valueOf(requestCode));
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
+            imageBitmap = resizeBitmap(imageBitmap, 450);
             gambar.setImageBitmap(imageBitmap);
             photoimg = false;
         }
