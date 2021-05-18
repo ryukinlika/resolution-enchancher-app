@@ -160,7 +160,7 @@ public class EnhanceOptionActivity extends AppCompatActivity {
             chooseimg = false;
         }
         else if (resultCode == RESULT_OK && requestCode == PERMISSION_CODE && photoimg) {
-            Log.d("Asd", String.valueOf(requestCode));
+            //set image to image view
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             imageBitmap = resizeBitmap(imageBitmap, 450);
