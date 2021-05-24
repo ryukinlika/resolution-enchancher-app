@@ -2,67 +2,153 @@ package id.ac.umn.esrganapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+    private FirebaseAuth mAuth;
+    private final FirebaseDatabase db = FirebaseDatabase.getInstance();
+    private final DatabaseReference UserDb = db.getReference().child("Users");
+    private TextView banner, registerUser;
+    private EditText Name, Email, Pass, C_Pass;
+    private ProgressBar pBar;
 
-public class RegisterAcitivity extends AppCompatActivity {
-    private EditText username, password, confPass;
-    private Button register;
-    private byte[] hash, salt;
-    Context context = this;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        register = findViewById(R.id.registerButton);
-        username = findViewById(R.id.username);
-        password = findViewById(R.id.password);
-        confPass = findViewById(R.id.confirmPassword);
-        try {
-            //Generate Salt for pass
-            SecureRandom random = new SecureRandom();
-            salt = new byte[16];
-            random.nextBytes(salt);
+        mAuth = FirebaseAuth.getInstance();
 
-            //SHA-521 init
-            KeySpec spec = new PBEKeySpec(password.getText().toString().toCharArray(), salt, 65536, 128);
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        registerUser = (Button) findViewById(R.id.register);
+        registerUser.setOnClickListener(this);
 
-            hash = factory.generateSecret(spec).getEncoded();
+        Name = (EditText) findViewById(R.id.name);
+        Email = (EditText) findViewById(R.id.email);
+        Pass = (EditText) findViewById(R.id.password);
+        C_Pass = (EditText) findViewById(R.id.confirmpassword);
+
+        pBar = (ProgressBar) findViewById(R.id.progressBar);
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.register){
+            registerUser();
         }
-        catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            System.err.println("We're sorry, please try again");
+    }
+
+    private void registerUser(){
+        String email = Email.getText().toString().trim();
+        String name = Name.getText().toString().trim();
+        String pass = Pass.getText().toString().trim();
+        String Cpass = C_Pass.getText().toString().trim();
+
+        if(isOnline()!=true){
+            Toast.makeText(RegisterActivity.this, "No Internet Connection, Please try again",Toast.LENGTH_LONG).show();
         }
 
+        if(name.isEmpty()){
+            Name.setError("Name is Required!");
+            Name.requestFocus();
+            return;
+        }
+        if(email.isEmpty()){
+            Email.setError("Email is Required!");
+            Email.requestFocus();
+            return;
+        }
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            Email.setError("Email is not valid!");
+            Email.requestFocus();
+            return;
+        }
+        if(pass.isEmpty()){
+            Pass.setError("Password is Required!");
+            Pass.requestFocus();
+            return;
+        }
+        if(pass.length() <6){
+            Pass.setError("Min length is 6 for Password!");
+            Pass.requestFocus();
+            return;
+        }
+        if(Cpass.isEmpty()){
+            C_Pass.setError("Password Confirmation is Required!");
+            C_Pass.requestFocus();
+            return;
+        }
+        if(pass.equals(C_Pass)) {
+            C_Pass.setError("Password Confirmation has to be same as Password!");
+            C_Pass.requestFocus();
+            return;
+        }
 
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("salt",salt.toString());
-                Log.d("password", password.getText().toString());
-                Log.d("asd",hash.toString());
-                if(username.getText().toString().equals("uasmobile") &&
-                        password.getText().toString().equals("uasmobilegenap")) {
-                    Intent register = new Intent (context, MainActivity.class);
-                    register.putExtra("nama","check");
-                    startActivity(register);
-                }
-            }
-        });
+        pBar.setVisibility((View.VISIBLE));
+        Log.d("a","now no here");
+        mAuth.createUserWithEmailAndPassword(email, pass)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d("a","now no here");
+
+                        if(task.isSuccessful()){
+                            User user = new User(name, email);
+                            String s = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            Log.d("d",s);
+
+                            FirebaseDatabase.getInstance().getReference()
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                    if(task.isSuccessful()){
+                                        Toast.makeText(RegisterActivity.this, "User has been Registered Successfully!!",Toast.LENGTH_LONG).show();
+                                        pBar.setVisibility(View.VISIBLE);
+                                    }
+                                    else {
+                                        Toast.makeText(RegisterActivity.this, "Failed to Regster, Please Try Again",Toast.LENGTH_LONG).show();
+                                        pBar.setVisibility(View.GONE);
+
+
+                                    }
+                                }
+                            });
+
+                        } else {
+                            Toast.makeText(RegisterActivity.this, "Failed to Register, Please Try Again",Toast.LENGTH_LONG).show();
+                            pBar.setVisibility(View.GONE);
+                        }
+                    }
+                });
+
+    }
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }
