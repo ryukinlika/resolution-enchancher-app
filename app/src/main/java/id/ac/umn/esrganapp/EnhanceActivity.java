@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
@@ -45,8 +46,17 @@ public class EnhanceActivity extends AppCompatActivity {
         MODEL_HEIGHT = 50; //set model size
         MODEL_WIDTH = 50; //set model size
 
+
+
         btn = findViewById(R.id.tryButton);
         imgView = findViewById(R.id.imageViewTest);
+
+        //take passing bytearray and decode
+        Bundle extras = getIntent().getExtras();
+        byte[] byteArray = extras.getByteArray("my_image");
+        Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        imgView.setImageBitmap(bmp);
+
         imgView.invalidate();
         BitmapDrawable drawable = (BitmapDrawable) imgView.getDrawable();
         bm = drawable.getBitmap();

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +22,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+
+import java.io.ByteArrayOutputStream;
 
 public class EnhanceOptionActivity extends AppCompatActivity {
 
@@ -37,6 +41,7 @@ public class EnhanceOptionActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        img=false;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enhance_option);
 
@@ -96,7 +101,16 @@ public class EnhanceOptionActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //if picture selected
                 if (img) {
+                    //get bitmap from imageview "gambar" then convert to bytearray
+                    Bitmap bitmap = ((BitmapDrawable)gambar.getDrawable()).getBitmap();
+                    Log.d("BITMAP", bitmap.toString());
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+
+                    //passing bytearray
                     Intent intent = new Intent(context, EnhanceActivity.class);
+                    intent.putExtra("my_image", byteArray);
                     startActivity(intent);
                 }
                 //if no picture selected
@@ -132,7 +146,7 @@ public class EnhanceOptionActivity extends AppCompatActivity {
         }
     }
 
-    //resizing bitmap or image that taken with a camaera
+    //resizing bitmap or image that taken with a camera
     public Bitmap resizeBitmap(Bitmap getBitmap, int maxSize) {
         int width = getBitmap.getWidth();
         int height = getBitmap.getHeight();
