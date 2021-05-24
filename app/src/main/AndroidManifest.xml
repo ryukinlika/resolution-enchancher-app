@@ -24,6 +24,10 @@
             android:theme="@style/Theme.PoggersEsrgan.NoActionBar">
         </activity>
 
+        <activity android:name=".RegisterActivity"
+            android:parentActivityName=".RegisterActivity">
+        </activity>
+
         <activity android:name=".EnhanceActivity"
             android:parentActivityName=".EnhanceOptionActivity">
         </activity>
