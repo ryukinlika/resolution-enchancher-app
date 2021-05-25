@@ -24,7 +24,7 @@ public class OnboardingActivity extends AppCompatActivity{
 
     private TextView[] mDots;
 
-    private Button back, next;
+    private Button next;
 
     private int mCurr;
 
@@ -39,7 +39,6 @@ public class OnboardingActivity extends AppCompatActivity{
         //get Variables
         mSlide = (ViewPager) findViewById(R.id.slideView);
         mDotLayer = (LinearLayout) findViewById(R.id.dots);
-        back = findViewById(R.id.btn_back);
         next = findViewById(R.id.btn_next);
 
         //Initialize variable for mDot (dots to indicate which page)
@@ -62,19 +61,6 @@ public class OnboardingActivity extends AppCompatActivity{
                     mSlide.setCurrentItem(mCurr+1);
             }
         });
-
-        //Go to
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mSlide.setCurrentItem(mCurr-1);
-            }
-        });
-
-        //Remove back button onload
-        back.setEnabled(false);
-        back.setVisibility(View.INVISIBLE);
-        back.setText("");
     }
 
     //create dots for slider
@@ -112,24 +98,10 @@ public class OnboardingActivity extends AppCompatActivity{
         public void onPageSelected(int position) {
             addDotsIndicator(position);
             mCurr = position;
-            if(position == 0){
-                next.setEnabled(true);
-                next.setText("Next");
-                back.setEnabled(false);
-                back.setVisibility(View.INVISIBLE);
-                back.setText("");
-            }else if(position == 2){
-                next.setEnabled(true);
+            if(position == 2){
                 next.setText("Finish");
-                back.setEnabled(true);
-                back.setVisibility(View.VISIBLE);
-                back.setText("Back");
             }else{
-                next.setEnabled(true);
                 next.setText("Next");
-                back.setEnabled(true);
-                back.setVisibility(View.VISIBLE);
-                back.setText("Back");
             }
         }
 
