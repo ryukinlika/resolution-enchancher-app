@@ -25,13 +25,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
+    private String database_url = "https://uaspemmob-default-rtdb.asia-southeast1.firebasedatabase.app/";
     private FirebaseAuth mAuth;
-    private final FirebaseDatabase db = FirebaseDatabase.getInstance();
+    private final FirebaseDatabase db = FirebaseDatabase.getInstance(database_url);
     private final DatabaseReference UserDb = db.getReference().child("Users");
     private TextView banner, registerUser;
     private EditText Name, Email, Pass, C_Pass;
     private ProgressBar pBar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,15 +111,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d("a","now no here");
-
                         if(task.isSuccessful()){
                             User user = new User(name, email);
-                            String s = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                            Log.d("d",s);
+                            String s = mAuth.getCurrentUser().getUid();
+                            Log.d("debug user id",s);
 
-                            FirebaseDatabase.getInstance().getReference()
-                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            UserDb.child(s)
                                     .setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
@@ -129,7 +126,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                         pBar.setVisibility(View.VISIBLE);
                                     }
                                     else {
-                                        Toast.makeText(RegisterActivity.this, "Failed to Regster, Please Try Again",Toast.LENGTH_LONG).show();
+                                        Toast.makeText(RegisterActivity.this, "Failed to Register, Please Try Again",Toast.LENGTH_LONG).show();
                                         pBar.setVisibility(View.GONE);
 
 
