@@ -32,15 +32,15 @@ public class Slider extends PagerAdapter {
     //set heading for slider
     public String[] slide_headings={
       "Low Cost, High Quality",
-            "Improvize your photo",
-            "Socialize"
+            "Improvise your photo",
+            "Save your photo"
     };
 
     //set body for slider
     public String[] slide_bodys={
             "No need to buy high quality camera now!",
-            "ERSGAN improves your photo quality by four times!",
-            "Share your photo and see other high resolution photos that people took"
+            "ESRGAN improves your photo quality by four times!",
+            "Save and Backup your enchanced photo easily!"
     };
 
 

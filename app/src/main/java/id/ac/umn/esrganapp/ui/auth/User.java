@@ -1,4 +1,4 @@
-package id.ac.umn.esrganapp;
+package id.ac.umn.esrganapp.ui.auth;
 
 public class User {
 

@@ -1,4 +1,4 @@
-package id.ac.umn.esrganapp;
+package id.ac.umn.esrganapp.ui.auth;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +23,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import id.ac.umn.esrganapp.R;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
     private String database_url = "https://uaspemmob-default-rtdb.asia-southeast1.firebasedatabase.app/";
@@ -124,6 +126,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                                     if(task.isSuccessful()){
                                         Toast.makeText(RegisterActivity.this, "User has been Registered Successfully!!",Toast.LENGTH_LONG).show();
                                         pBar.setVisibility(View.VISIBLE);
+                                        startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                                     }
                                     else {
                                         Toast.makeText(RegisterActivity.this, "Failed to Register, Please Try Again",Toast.LENGTH_LONG).show();
@@ -135,7 +138,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                             });
 
                         } else {
-                            Toast.makeText(RegisterActivity.this, "Failed to Register, Please Try Again",Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterActivity.this, "Email already Exist! Please try again",Toast.LENGTH_LONG).show();
                             pBar.setVisibility(View.GONE);
                         }
                     }
