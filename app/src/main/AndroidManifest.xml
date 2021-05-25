@@ -23,14 +23,17 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/Theme.PoggersEsrgan.NoActionBar">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
         </activity>
 
-        <activity android:name=".RegisterActivity"
-            android:parentActivityName=".RegisterActivity">
+        <activity android:name=".ui.auth.RegisterActivity"
+            android:parentActivityName=".ui.auth.RegisterActivity">
+        </activity>
+
+        <activity android:name=".ui.auth.LoginActivity"
+            android:parentActivityName=".ui.auth.LoginActivity">
         </activity>
 
         <activity android:name=".EnhanceActivity"

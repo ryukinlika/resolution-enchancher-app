@@ -6,6 +6,12 @@
     app:startDestination="@+id/nav_home">
 
     <fragment
+        android:id="@+id/menu_login"
+        android:name="id.ac.umn.esrganapp.ui.auth.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_about" />
+
+    <fragment
         android:id="@+id/nav_home"
         android:name="id.ac.umn.esrganapp.ui.home.HomeFragment"
         android:label="@string/menu_home"
