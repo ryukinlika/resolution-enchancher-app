@@ -62,11 +62,13 @@ public class GalleryFragment extends Fragment  implements GalleryRecyclerViewAda
         final String appDirectoryName = "PoggersApp";
         File[] imageRoot = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), appDirectoryName).listFiles(new ImageFileFilter());
-        for (File file : imageRoot) {
-            Bitmap image = BitmapHelper.decodeBitmapFromFile(file.getAbsolutePath(),
-                    100,
-                    100);
-            items.add(new GalleryThumbnail(file.getAbsolutePath(), image));
+        if(imageRoot.length != 0){
+            for (File file : imageRoot) {
+                Bitmap image = BitmapHelper.decodeBitmapFromFile(file.getAbsolutePath(),
+                        100,
+                        100);
+                items.add(new GalleryThumbnail(file.getAbsolutePath(), image));
+            }
         }
 
         return items;
