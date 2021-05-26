@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,8 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -106,9 +109,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             else {
                 //permission granted
-                if(fab.isShown()) fab.hide();
-                handle = NavigationUI.onNavDestinationSelected(item, navController);
-                drawer.closeDrawer(GravityCompat.START);
+
+                File dir = new File(Environment.getExternalStorageDirectory() + "/Pictures/PoggersApp");
+                if(dir.exists() && dir.isDirectory()) {
+                    if(fab.isShown()) fab.hide();
+                    handle = NavigationUI.onNavDestinationSelected(item, navController);
+                    drawer.closeDrawer(GravityCompat.START);
+                }
+
+                else if(!dir.exists() && !dir.isDirectory()) {
+                    Toast.makeText(this, "Theres no recent images", Toast.LENGTH_SHORT).show();
+                    return handle;
+                }
+
             }
         }
         return handle;
