@@ -4,8 +4,9 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <uses-feature
         android:name="android.hardware.camera2"
         android:required="true" />
@@ -19,6 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PoggersEsrgan">
+        <activity android:name=".ui.gallery.ViewImageActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
@@ -27,33 +29,31 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ui.auth.RegisterActivity"
-            android:parentActivityName=".ui.auth.RegisterActivity">
-        </activity>
-
-        <activity android:name=".ui.auth.LoginActivity"
-            android:parentActivityName=".ui.auth.LoginActivity">
-        </activity>
-
-        <activity android:name=".EnhanceActivity"
-            android:parentActivityName=".EnhanceOptionActivity"
-            android:noHistory="true">
-        </activity>
-
-        <activity android:name=".EnhanceOptionActivity"
-            android:parentActivityName=".MainActivity">
-        </activity>
-
+        <activity
+            android:name=".ui.auth.RegisterActivity"
+            android:parentActivityName=".ui.auth.RegisterActivity"></activity>
+        <activity
+            android:name=".ui.auth.LoginActivity"
+            android:parentActivityName=".ui.auth.LoginActivity"></activity>
+        <activity
+            android:name=".EnhanceActivity"
+            android:noHistory="true"
+            android:parentActivityName=".EnhanceOptionActivity"></activity>
+        <activity
+            android:name=".EnhanceOptionActivity"
+            android:parentActivityName=".MainActivity"></activity>
         <activity android:name=".OnboardingActivity">
-<!--            android:name=".OnboardingActivity"-->
-<!--            android:label="OnboardingActivity"-->
-<!--            android:theme="@style/Theme.PoggersEsrgan.NoActionBar"-->
-        </activity>
 
-        <activity android:name=".SplashActivity" android:noHistory="true">
+            <!-- android:name=".OnboardingActivity" -->
+            <!-- android:label="OnboardingActivity" -->
+            <!-- android:theme="@style/Theme.PoggersEsrgan.NoActionBar" -->
+        </activity>
+        <activity
+            android:name=".SplashActivity"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
