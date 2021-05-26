@@ -65,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         String email = Email.getText().toString().trim();
         String name = Name.getText().toString().trim();
         String pass = Pass.getText().toString().trim();
-        String Cpass = C_Pass.getText().toString().trim();
+        String CPass = C_Pass.getText().toString().trim();
 
         if(isOnline()!=true){
             Toast.makeText(RegisterActivity.this, "No Internet Connection, Please try again",Toast.LENGTH_LONG).show();
@@ -96,12 +96,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             Pass.requestFocus();
             return;
         }
-        if(Cpass.isEmpty()){
+        if(CPass.isEmpty()){
             C_Pass.setError("Password Confirmation is Required!");
             C_Pass.requestFocus();
             return;
         }
-        if(pass.equals(C_Pass)) {
+        if(!pass.equals(CPass)) {
             C_Pass.setError("Password Confirmation has to be same as Password!");
             C_Pass.requestFocus();
             return;
