@@ -286,6 +286,11 @@ public class EnhanceActivity extends AppCompatActivity {
             String name = "IMG_" + counter;
             counter++;
 
+            final String appDirectoryName = "PoggersApp";
+            final File imageRoot = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_PICTURES), appDirectoryName);
+            if(!imageRoot.exists())imageRoot.mkdirs();
+
             try {
                 OutputStream fos;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -293,12 +298,12 @@ public class EnhanceActivity extends AppCompatActivity {
                     ContentValues contentValues = new ContentValues();
                     contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, name + ".jpg");
                     contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpg");
-                    contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+                    contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + File.separator + appDirectoryName);
                     Uri imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
                     fos = resolver.openOutputStream(Objects.requireNonNull(imageUri));
                 } else {
-                    String imagesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
-                    File image = new File(imagesDir, name + ".jpg");
+//                    String imagesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
+                    File image = new File(imageRoot, name + ".jpg");
                     fos = new FileOutputStream(image);
                 }
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);

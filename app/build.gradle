@@ -61,4 +61,7 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-database'
+
+    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
+
 }

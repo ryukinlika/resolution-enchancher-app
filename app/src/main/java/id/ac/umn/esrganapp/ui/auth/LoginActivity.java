@@ -44,6 +44,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         In_pass = (EditText) findViewById(R.id.password);
 
         pBar = (ProgressBar) findViewById(R.id.progressBar);
+        pBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -91,6 +92,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         } else{
                             Toast.makeText(LoginActivity.this, "Username or Password is incorrect, Please try again",Toast.LENGTH_LONG).show();
+                            pBar.setVisibility(View.INVISIBLE);
                         }
                     }
                 });
