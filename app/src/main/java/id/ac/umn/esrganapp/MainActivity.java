@@ -1,12 +1,16 @@
 package id.ac.umn.esrganapp;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -32,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     DrawerLayout drawer;
     NavigationView navigationView;
     NavController navController;
+    private static final int PERMISSION_CODE = 102;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,15 +87,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        boolean handle = NavigationUI.onNavDestinationSelected(item, navController);
+        boolean handle = false;
         if (id == R.id.nav_home || id == R.id.nav_about) {
-            if (!fab.isShown()) {
-                fab.show();
+            if (!fab.isShown()) fab.show();
+            handle = NavigationUI.onNavDestinationSelected(item, navController);
+            drawer.closeDrawer(GravityCompat.START);
+        } else if (id == R.id.nav_login) {
+            if(fab.isShown()) fab.hide();
+            handle = NavigationUI.onNavDestinationSelected(item, navController);
+            drawer.closeDrawer(GravityCompat.START);
+        } else if (id == R.id.nav_gallery){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                    checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                //permission not granted, need request
+                String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
+                //show popup for runtime permission
+                requestPermissions(permissions, PERMISSION_CODE);
             }
-        } else if (fab.isShown()) {
-            fab.hide();
+            else {
+                //permission granted
+                if(fab.isShown()) fab.hide();
+                handle = NavigationUI.onNavDestinationSelected(item, navController);
+                drawer.closeDrawer(GravityCompat.START);
+            }
         }
-        drawer.closeDrawer(GravityCompat.START);
         return handle;
+    }
+
+
+    //handle result of runtime permission
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_CODE: {
+                if (grantResults.length > 0 && grantResults[0] ==
+                        PackageManager.PERMISSION_GRANTED) {
+                    
+                }
+                else {
+                    //permission denied
+                    Toast.makeText(this, "Permission Denied...!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
     }
 }
