@@ -10,6 +10,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private TextView banner, registerUser;
     private EditText Name, Email, Pass, C_Pass;
     private ProgressBar pBar;
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

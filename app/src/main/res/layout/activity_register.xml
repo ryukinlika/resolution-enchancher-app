@@ -5,43 +5,26 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:id="@+id/banner"
+    <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Poggers"
-        android:textSize="60sp"
-        android:textAlignment="center"
-        android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginTop="50dp"
-        />
-
-    <TextView
-        android:id="@+id/bannerDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="by Poggers"
-        android:textStyle="italic"
-        android:textSize="18sp"
-        android:textAlignment="center"
-        app:layout_constraintTop_toBottomOf="@id/banner"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        />
+        android:layout_marginTop="30dp"
+        app:srcCompat="@drawable/app_name" />
 
     <EditText
         android:id="@+id/name"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="30dp"
         android:ems="10"
         android:textSize="24sp"
         android:hint="Names"
         android:inputType="textEmailAddress"
-        app:layout_constraintTop_toBottomOf="@+id/bannerDescription"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         />
@@ -90,8 +73,8 @@
         android:layout_width="380dp"
         android:layout_height="70dp"
         android:layout_marginTop="68dp"
-        android:backgroundTint="#0ED6B9"
-        android:text="Register User"
+        android:backgroundTint="#475c5a"
+        android:text="Register"
         android:textColor="#ffffff"
         android:textSize="26sp"
         android:textStyle="bold"
