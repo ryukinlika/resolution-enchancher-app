@@ -17,7 +17,7 @@
         />
 
     <Button
-        android:id="@+id/backupPhoto"
+        android:id="@+id/backup"
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:layout_alignParentStart="true"
@@ -28,7 +28,6 @@
         android:background="@drawable/button"
         android:gravity="center"
         android:text="Backup dummy"
-        android:visibility="invisible"
         android:textColor="@color/white"
         app:backgroundTint="@android:color/holo_red_light"
         app:layout_constraintBottom_toBottomOf="parent"

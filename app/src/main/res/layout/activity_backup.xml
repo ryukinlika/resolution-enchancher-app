@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.auth.BackupFragment">
+    tools:context=".ui.gallery.BackupFragment">
     <ImageView
         android:id="@+id/onboarding_logo_app"
         android:layout_width="141dp"

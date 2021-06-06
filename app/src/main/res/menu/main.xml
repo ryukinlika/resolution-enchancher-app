@@ -6,4 +6,18 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/backupData"
+        android:orderInCategory="100"
+        android:title="Select Photo for Backup"
+        android:visible="false"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/Logout"
+        android:orderInCategory="100"
+        android:title="Logout"
+        android:visible="false"
+        app:showAsAction="never" />
 </menu>
