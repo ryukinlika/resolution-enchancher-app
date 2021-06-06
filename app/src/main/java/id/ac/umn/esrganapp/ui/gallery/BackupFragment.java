@@ -58,27 +58,11 @@ public class BackupFragment extends Fragment{
             });
         }
         else {
-            root = inflater.inflate(R.layout.fragment_backup, container, false);
-            backupButton = root.findViewById(R.id.login);
-            onboarding_heading = root.findViewById(R.id.onboarding_heading);
-            onboarding_body = root.findViewById(R.id.onboarding_body);
+            root = inflater.inflate(R.layout.fragment_frame, container, false);
+            Fragment backupFragment = new BackupContentFragment();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_backup, backupFragment).commit();
 
-            onboarding_heading.setText("No Photo have been backed up!!");
-            onboarding_body.setText("Start backing up your photo!");
-            backupButton.setText("Backup Now");
 
-            backupButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Fragment fragment = new GalleryFragment();
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.nav_host_fragment, fragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
-
-                }
-            });
 
 //            data = getImagesFromExternalDir();
 //
