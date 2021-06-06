@@ -283,7 +283,7 @@ public class EnhanceActivity extends AppCompatActivity {
         protected String doInBackground(Void... params) {
             SharedPreferences pref = getSharedPreferences("file_save", MODE_PRIVATE);
             int counter = pref.getInt("file_save_counter", 0);
-            String name = "IMG_" + counter;
+            String name = "IMG_" + counter + System.currentTimeMillis();;
             counter++;
 
             final String appDirectoryName = "PoggersApp";

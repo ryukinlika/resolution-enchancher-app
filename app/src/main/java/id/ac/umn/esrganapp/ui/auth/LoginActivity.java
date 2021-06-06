@@ -92,6 +92,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                             if(user.isEmailVerified()){
                                 //redirect to camera enchance
+
+
                                 Toast.makeText(LoginActivity.this, "Login Successful! Returning to Main Page",Toast.LENGTH_LONG).show();
                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             }
