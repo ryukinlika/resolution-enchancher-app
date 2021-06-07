@@ -5,11 +5,12 @@ import android.graphics.Bitmap;
 public class GalleryThumbnail {
     private String path;
     private Bitmap image;
-
+    private boolean checked;
 
     public GalleryThumbnail(String path, Bitmap image) {
         this.path = path;
         this.image = image;
+        checked = false;
     }
 
 
@@ -17,8 +18,9 @@ public class GalleryThumbnail {
         return path;
     }
 
-
-
+    public boolean getChecked(){ return checked;}
+    public void setCheckedTrue() {checked = true;}
+    public void setCheckedFalse() {checked = false;}
     public Bitmap getImage() {
         return image;
     }

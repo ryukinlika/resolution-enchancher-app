@@ -44,7 +44,7 @@ import java.util.List;
 
 import id.ac.umn.esrganapp.R;
 
-public class GalleryFragment extends Fragment  implements GalleryRecyclerViewAdapter.ItemClickListener{
+public class GalleryFragment extends Fragment implements GalleryRecyclerViewAdapter.ItemClickListener{
 
     private RecyclerView recyclerView;
     private String database_url = "https://uaspemmob-default-rtdb.asia-southeast1.firebasedatabase.app/";
@@ -175,15 +175,23 @@ public class GalleryFragment extends Fragment  implements GalleryRecyclerViewAda
             }
             //add uri to imageUris and remove if uri already Exist
             else if(ImageUris.contains(uri)){
+                data.get(position).setCheckedFalse();
+                adapter.notifyItemChanged(position);
                 ImageUris.remove(uri);
             }else{
+                data.get(position).setCheckedTrue();
+                adapter.notifyItemChanged(position);
                 ImageUris.add(uri);
             }
         }
         else if(isdeleted){
             if(ImageDelete.contains(uri)){
+                data.get(position).setCheckedFalse();
+                adapter.notifyItemChanged(position);
                 ImageDelete.remove(uri);
             }else{
+                data.get(position).setCheckedTrue();
+                adapter.notifyItemChanged(position);
                 ImageDelete.add(uri);
             }
         }
@@ -232,12 +240,17 @@ public class GalleryFragment extends Fragment  implements GalleryRecyclerViewAda
                 if(isbackup){
                     //remove all selected image from arraylist & set button visibility
                     ImageUris.clear();
+                    for(GalleryThumbnail a : data)a.setCheckedFalse();
+                    adapter.notifyDataSetChanged();
                     backupButton.setVisibility(View.INVISIBLE);
                 }
                 else{
                     //set button invisible if backup canceled
                     if(isdeleted){
                         isdeleted = false;
+                        ImageDelete.clear();
+                        for(GalleryThumbnail a : data)a.setCheckedFalse();
+                        adapter.notifyDataSetChanged();
                         deleteButton.setVisibility(View.INVISIBLE);
                     }
                     backupButton.setVisibility(View.VISIBLE);
@@ -250,12 +263,17 @@ public class GalleryFragment extends Fragment  implements GalleryRecyclerViewAda
                 if(isdeleted){
                     //remove all selected image from arraylist & set button visibility
                     ImageDelete.clear();
+                    for(GalleryThumbnail a : data)a.setCheckedFalse();
+                    adapter.notifyDataSetChanged();
                     deleteButton.setVisibility(View.INVISIBLE);
                 }
                 else{
                     //set button visible
                     if(isbackup){
                         isbackup = false;
+                        ImageUris.clear();
+                        for(GalleryThumbnail a : data)a.setCheckedFalse();
+                        adapter.notifyDataSetChanged();
                         backupButton.setVisibility(View.INVISIBLE);
                     }
                     deleteButton.setVisibility(View.VISIBLE);
@@ -266,6 +284,9 @@ public class GalleryFragment extends Fragment  implements GalleryRecyclerViewAda
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
     private static class BitmapHelper {
         public static Bitmap decodeBitmapFromFile(String imagePath, int maxWidth, int maxHeight) {
             // First decode with inJustDecodeBounds=true to check dimensions
@@ -329,4 +350,8 @@ public class GalleryFragment extends Fragment  implements GalleryRecyclerViewAda
 //            }
         });
     }
+
+
+
+
 }

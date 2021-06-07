@@ -38,7 +38,10 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.image.setImageBitmap(mData.get(position).getImage());
+        if(mData.get(position).getChecked())holder.checkbox.setVisibility(View.VISIBLE);
+        else holder.checkbox.setVisibility(View.INVISIBLE);
         //holder.image.setImageURI(mData[position]);
+
     }
 
     // total number of cells
@@ -51,11 +54,13 @@ public class GalleryRecyclerViewAdapter extends RecyclerView.Adapter<GalleryRecy
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView image;
-
+        ImageView checkbox;
         ViewHolder(View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.thumbnail);
+            checkbox = itemView.findViewById(R.id.checked_symbol);
             itemView.setOnClickListener(this);
+
         }
 
         @Override

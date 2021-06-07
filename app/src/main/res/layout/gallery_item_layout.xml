@@ -6,12 +6,25 @@
     android:layout_width="100dp"
     android:layout_height="100dp"
     android:layout_margin="5dp">
-
-    <ImageView
-        android:id="@+id/thumbnail"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        />
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            />
+        <ImageView
+            android:id="@+id/checked_symbol"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:src="@drawable/ic_thumbnail_checked"
+            android:layout_margin="10dp"
+            android:visibility="invisible"
+            />
+    </FrameLayout>
+
 
 </LinearLayout>
