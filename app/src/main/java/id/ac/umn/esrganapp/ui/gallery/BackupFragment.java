@@ -52,7 +52,7 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
     private RecyclerView recyclerView;
     private TextView onboarding_heading, onboarding_body;
     private GalleryRecyclerViewAdapter adapter;
-    private List<GalleryThumbnail> data;
+    private List<GalleryThumbnail> data = new ArrayList<>();
     private boolean isbackup = false;
     private List<String> ImagePaths = new ArrayList<>();
     private Button loginButton, backupButton;
@@ -108,7 +108,7 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_backup, backupFragment).commit();
             } else {
                 root = inflater.inflate(R.layout.fragment_gallery_backup, container, false);
-                data = getImagesFromExternalDir(mainStorageUri);
+                getImagesFromExternalDir(mainStorageUri);
                 recyclerView = root.findViewById(R.id.recyclerView_backup);
                 int numberOfColumns = 3;
                 recyclerView.setLayoutManager(new GridLayoutManager(root.getContext(), numberOfColumns));
@@ -125,15 +125,15 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
                     }
                 });
                 adapter.notifyDataSetChanged();
-                Log.d("data size ", String.valueOf(data.size()));
+                //Log.d("data size ", String.valueOf(data.size()));
             }
         }
         return root;
     }
 
 
-    private List<GalleryThumbnail> getImagesFromExternalDir(List<String> StorageUris) {
-        List<GalleryThumbnail> items = new ArrayList<GalleryThumbnail>();
+    private void getImagesFromExternalDir(List<String> StorageUris) {
+//        List<GalleryThumbnail> items = new ArrayList<GalleryThumbnail>();
 
         for (int i = 0; i < StorageUris.size(); i++) {
             try{
@@ -145,7 +145,8 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
                         Bitmap image = BackupFragment.BitmapHelper.decodeBitmapFromFile(localFile.getAbsolutePath(),
                                 100,
                                 100);
-                        items.add(new GalleryThumbnail(directoryStorage, image));
+                        data.add(new GalleryThumbnail(directoryStorage, image));
+                        adapter.notifyDataSetChanged();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -158,7 +159,7 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
             }
         }
 
-        return items;
+        return;
 
     }
 
