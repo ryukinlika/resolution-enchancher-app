@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             databaseImages.orderByChild("email").equalTo(currentUser.getEmail()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
+                    //Clear all previous StorageUris
+                    StorageUris.clear();
                     //Iterates through all value gotten from query
                     Iterator<DataSnapshot> dataSnapshots = dataSnapshot.getChildren().iterator();
                     //Function to store all img_uri (used later to compare the selected image for backup
