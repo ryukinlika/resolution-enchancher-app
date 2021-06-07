@@ -1,5 +1,6 @@
 package id.ac.umn.esrganapp.ui.gallery;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,7 +33,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 
 import java.io.File;
@@ -66,27 +69,6 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root;
-//        if(currentUser!=null){
-//            databaseImages.orderByChild("email").equalTo(currentUser.getEmail()).addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(DataSnapshot dataSnapshot) {
-//                    //Iterates through all value gotten from query
-//                    Iterator<DataSnapshot> dataSnapshots = dataSnapshot.getChildren().iterator();
-//                    //Function to store all img_uri (used later to compare the selected image for backup
-//                    //to know if image has already exist in backup or not
-//                    while (dataSnapshots.hasNext()) {
-//                        DataSnapshot dataSnapshotChild = dataSnapshots.next();
-//                        StorageUris.add(dataSnapshotChild.getKey());
-//                        Log.d("sizeAll", String.valueOf((StorageUris.size())));
-//                    }
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError error) {
-//
-//                }
-//            });
-//        }
         if(currentUser == null){
             root = inflater.inflate(R.layout.fragment_backup, container, false);
             loginButton = root.findViewById(R.id.login);
@@ -134,12 +116,31 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
 
     private void getImagesFromExternalDir(List<String> StorageUris) {
 //        List<GalleryThumbnail> items = new ArrayList<GalleryThumbnail>();
+        ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle("Getting all images from Backup Storage");
+        progressDialog.show();
 
         for (int i = 0; i < StorageUris.size(); i++) {
+            Log.d("namae", String.valueOf(i));
             try{
                 final File localFile = File.createTempFile("Images", "bmp");
                 String directoryStorage = "images/"+StorageUris.get(i);
-                storageReference.child(directoryStorage).getFile(localFile).addOnSuccessListener(new OnSuccessListener< FileDownloadTask.TaskSnapshot >() {
+                storageReference.child(directoryStorage).getFile(localFile).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "Failed" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnProgressListener(new OnProgressListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(@NonNull FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0
+                                * taskSnapshot.getBytesTransferred()
+                                / taskSnapshot.getTotalByteCount());
+                        progressDialog.setMessage(
+                                "Getting images from Storage "
+                                        + (int) progress + "%");
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         Bitmap image = BackupFragment.BitmapHelper.decodeBitmapFromFile(localFile.getAbsolutePath(),
@@ -147,32 +148,23 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
                                 100);
                         data.add(new GalleryThumbnail(directoryStorage, image));
                         adapter.notifyDataSetChanged();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        if(data.size() == StorageUris.size())
+                        progressDialog.dismiss();
                     }
                 });
             }catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-        return;
-
     }
 
-        @Override
+
+    @Override
     public void onItemClick(View view, int position) {
+        String path = data.get(position).getPath();
+        Uri uri = Uri.fromFile(new File(path));
+        // if button menu backup selected
 
-    }
-//    @Override
-//    public void onItemClick(View view, int position) {
-//        String path = data.get(position).getPath();
-//        Uri uri = Uri.fromFile(new File(path));
-//        // if button menu backup selected
-//
 //        if(isbackup){
 //            //Check if imageUri already exist in firebase (through ArrayList StorageUris
 //            if(StorageUris.contains(uri.toString())){
@@ -187,11 +179,11 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
 //        }
 //        //full size image
 //        else {
-//            Intent intent = new Intent(this.getContext(), ViewImageActivity.class);
-//            intent.putExtra("image_path", path);
-//            startActivity(intent);
+            Intent intent = new Intent(this.getContext(), ViewImageActivity.class);
+            intent.putExtra("backup_image_name", path);
+            startActivity(intent);
 //        }
-//    }
+    }
 
 
     private class ImageFileFilter implements FileFilter {
