@@ -18,6 +18,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
 import androidx.core.view.GravityCompat;
@@ -28,6 +34,10 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -40,9 +50,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NavController navController;
     private static final int PERMISSION_CODE = 102;
 
+    private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    private String database_url = "https://uaspemmob-default-rtdb.asia-southeast1.firebasedatabase.app/";
+    private final DatabaseReference databaseImages = FirebaseDatabase.getInstance(database_url).getReference().child("Images");
+    public List<String> StorageUris = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if(currentUser!=null){
+            databaseImages.orderByChild("email").equalTo(currentUser.getEmail()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    //Iterates through all value gotten from query
+                    Iterator<DataSnapshot> dataSnapshots = dataSnapshot.getChildren().iterator();
+                    //Function to store all img_uri (used later to compare the selected image for backup
+                    //to know if image has already exist in backup or not
+                    while (dataSnapshots.hasNext()) {
+                        DataSnapshot dataSnapshotChild = dataSnapshots.next();
+                        StorageUris.add(dataSnapshotChild.getKey());
+                        Log.d("sizeAll", String.valueOf((StorageUris.size())));
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
         setTheme(R.style.Theme_PoggersEsrgan_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -132,4 +167,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     }
+
+    public List<String> getStorageUri(){return StorageUris;}
 }

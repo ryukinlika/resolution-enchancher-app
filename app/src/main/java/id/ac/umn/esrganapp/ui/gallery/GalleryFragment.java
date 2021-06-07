@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
@@ -109,6 +110,7 @@ public class GalleryFragment extends Fragment implements GalleryRecyclerViewAdap
             public void onClick(View v) {
                 String user_email = currentUser.getEmail();
                 for (int i = 0; i < ImageUris.size(); i++) {
+                    Log.d("Image Uris : ", ImageUris.get(i).toString());
                     uploadPicture(ImageUris.get(i),user_email);
                 }
             }

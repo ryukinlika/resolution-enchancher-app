@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import id.ac.umn.esrganapp.MainActivity;
 import id.ac.umn.esrganapp.R;
 import id.ac.umn.esrganapp.ui.auth.LoginActivity;
 
@@ -65,27 +66,27 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root;
-        if(currentUser!=null){
-            databaseImages.orderByChild("email").equalTo(currentUser.getEmail()).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    //Iterates through all value gotten from query
-                    Iterator<DataSnapshot> dataSnapshots = dataSnapshot.getChildren().iterator();
-                    //Function to store all img_uri (used later to compare the selected image for backup
-                    //to know if image has already exist in backup or not
-                    while (dataSnapshots.hasNext()) {
-                        DataSnapshot dataSnapshotChild = dataSnapshots.next();
-                        StorageUris.add(dataSnapshotChild.getKey());
-                        Log.d("sizeAll", String.valueOf((StorageUris.size())));
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }
+//        if(currentUser!=null){
+//            databaseImages.orderByChild("email").equalTo(currentUser.getEmail()).addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//                    //Iterates through all value gotten from query
+//                    Iterator<DataSnapshot> dataSnapshots = dataSnapshot.getChildren().iterator();
+//                    //Function to store all img_uri (used later to compare the selected image for backup
+//                    //to know if image has already exist in backup or not
+//                    while (dataSnapshots.hasNext()) {
+//                        DataSnapshot dataSnapshotChild = dataSnapshots.next();
+//                        StorageUris.add(dataSnapshotChild.getKey());
+//                        Log.d("sizeAll", String.valueOf((StorageUris.size())));
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                }
+//            });
+//        }
         if(currentUser == null){
             root = inflater.inflate(R.layout.fragment_backup, container, false);
             loginButton = root.findViewById(R.id.login);
@@ -99,14 +100,16 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
             });
         }
         else {
-            if (StorageUris.size() == 0) {
+            List<String> mainStorageUri = ((MainActivity)getActivity()).getStorageUri();
+            Log.d("Main storage uri size", mainStorageUri.get(1));
+            if (mainStorageUri.size() == 0) {
                 root = inflater.inflate(R.layout.fragment_frame, container, false);
                 Fragment backupFragment = new BackupContentFragment();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_backup, backupFragment).commit();
             } else {
                 root = inflater.inflate(R.layout.fragment_gallery_backup, container, false);
-                data = getImagesFromExternalDir(StorageUris);
-                recyclerView = root.findViewById(R.id.recyclerView);
+                data = getImagesFromExternalDir(mainStorageUri);
+                recyclerView = root.findViewById(R.id.recyclerView_backup);
                 int numberOfColumns = 3;
                 recyclerView.setLayoutManager(new GridLayoutManager(root.getContext(), numberOfColumns));
                 adapter = new GalleryRecyclerViewAdapter(root.getContext(), data);
@@ -121,6 +124,8 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
                         startActivity(intent);
                     }
                 });
+                adapter.notifyDataSetChanged();
+                Log.d("data size ", String.valueOf(data.size()));
             }
         }
         return root;
