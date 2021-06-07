@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -18,6 +19,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,11 +51,14 @@ public class GalleryFragment extends Fragment  implements GalleryRecyclerViewAda
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     //Used to store image uris that will be used to upload image to firebase
     private List<Uri> ImageUris = new ArrayList<>();
+    private List<Uri> ImageDelete = new ArrayList<>();
     // Store all Uris from firebase storage if user already backup some images
     private List<String> StorageUris = new ArrayList<>();
     private List<GalleryThumbnail> data;
     private boolean isbackup = false;
+    private boolean isdeleted = false;
     private Button backupButton;
+    private Button deleteButton;
     private FirebaseStorage  storage = FirebaseStorage.getInstance();
     private StorageReference storageReference = storage.getReferenceFromUrl("gs://uaspemmob.appspot.com");
     private final DatabaseReference databaseImages = FirebaseDatabase.getInstance(database_url).getReference().child("Images");
@@ -104,6 +110,29 @@ public class GalleryFragment extends Fragment  implements GalleryRecyclerViewAda
             }
         });
 
+        deleteButton = root.findViewById(R.id.deletePhoto);
+        deleteButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                for (Uri s : ImageDelete){
+                    File fdelete = new File(s.getPath());
+                    if (fdelete.exists()) {
+                        if (fdelete.delete()) {
+                            System.out.println("file Deleted :" + s.getPath());
+                        } else {
+                            System.out.println("file not Deleted :" + s.getPath());
+                        }
+                    }
+                    Log.d("My array list content: ", s.toString());
+                    }
+//                Fragment currentFragment = getActivity().getSupportFragmentManager().findFragmentById(R.id.recyclerView);
+//                FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+//                fragmentTransaction.detach(currentFragment);
+//                fragmentTransaction.attach(currentFragment);
+//                fragmentTransaction.commit();
+            }
+        });
+
         return root;
     }
 
@@ -144,12 +173,21 @@ public class GalleryFragment extends Fragment  implements GalleryRecyclerViewAda
                 ImageUris.add(uri);
             }
         }
+        else if(isdeleted){
+            if(ImageDelete.contains(uri)){
+                ImageDelete.remove(uri);
+            }else{
+                ImageDelete.add(uri);
+            }
+        }
         //full size image
         else {
             Intent intent = new Intent(this.getContext(), ViewImageActivity.class);
             intent.putExtra("image_path", path);
             startActivity(intent);
         }
+
+
     }
 
 
@@ -172,6 +210,9 @@ public class GalleryFragment extends Fragment  implements GalleryRecyclerViewAda
         if(FirebaseAuth.getInstance().getCurrentUser() != null ){
             item.setVisible(true);
         }
+        //show delete image option
+        MenuItem itemDelete = menu.findItem(R.id.deleteImage);
+        itemDelete.setVisible(true);
     }
 
     //Function to handle if an item is selected
@@ -188,11 +229,33 @@ public class GalleryFragment extends Fragment  implements GalleryRecyclerViewAda
                 }
                 else{
                     //set button invisible if backup canceled
+                    if(isdeleted){
+                        isdeleted = false;
+                        deleteButton.setVisibility(View.INVISIBLE);
+                    }
                     backupButton.setVisibility(View.VISIBLE);
                 }
                 //flip isbackup everytime menu item is pressed
                 isbackup = !isbackup;
                 break;
+            case R.id.deleteImage:
+                deleteButton = getView().findViewById(R.id.deletePhoto);
+                if(isdeleted){
+                    //remove all selected image from arraylist & set button visibility
+                    ImageDelete.clear();
+                    deleteButton.setVisibility(View.INVISIBLE);
+                }
+                else{
+                    //set button visible
+                    if(isbackup){
+                        isbackup = false;
+                        backupButton.setVisibility(View.INVISIBLE);
+                    }
+                    deleteButton.setVisibility(View.VISIBLE);
+                }
+                isdeleted = !isdeleted;
+                break;
+
         }
         return super.onOptionsItemSelected(item);
     }
