@@ -83,7 +83,6 @@ public class GalleryFragment extends Fragment implements GalleryRecyclerViewAdap
                         DataSnapshot dataSnapshotChild = dataSnapshots.next();
                         StorageUris.add(dataSnapshotChild.child("img_uri").getValue().toString());
                     }
-                    Log.d("sizeAll", String.valueOf(StorageUris.size()));
                 }
 
                 @Override
