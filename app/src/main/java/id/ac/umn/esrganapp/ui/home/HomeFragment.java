@@ -27,13 +27,7 @@ public class HomeFragment extends Fragment {
         text_home.setText("Image Enhancement by Poggers");
 
         sub_text_home = root.findViewById(R.id.sub_text_home);
-        sub_text_home.setText("\u25CF Generate up-scaled image using ESRGAN for the best possible result\n" +
-                "\u25CF Works for all popular photo formats\n" +
-                "\u25CF Fix blur in photos\n" +
-                "\u25CF Potentially reduce noises\n" +
-                "\u25CF Up-scaled up to 4x original size");
-
-
+        sub_text_home.setText("Features");
         return root;
     }
 }

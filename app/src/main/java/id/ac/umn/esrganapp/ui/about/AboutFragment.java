@@ -1,6 +1,7 @@
 package id.ac.umn.esrganapp.ui.about;
 
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,7 @@ import androidx.fragment.app.Fragment;
 import id.ac.umn.esrganapp.R;
 
 public class AboutFragment extends Fragment {
-    TextView text_about_1, text_sub_1, text_about_2, text_sub_2;
+    TextView text_about_1, text_sub_1, text_about_2, text_sub_2, text_hyperlink;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -23,8 +24,9 @@ public class AboutFragment extends Fragment {
         text_about_1.setText("Learn more about ESRGAN");
         text_sub_1 = root.findViewById(R.id.text_sub_1);
         text_sub_1.setText("\u25CF ESRGAN stand for Enhanced Super-Resolution Generative Adversarial Networks.\n\n" +
-                "\u25CF ESRGAN is one of many technique to enhance an image to a super-resolution, it reconstruct a higher-resolution image from the lower-resolution images.\n\n" +
-                "\u25CF Read more about it at https://medium.com/analytics-vidhya/esrgan-enhanced-super-resolution-gan-96a28821634");
+                "\u25CF ESRGAN is one of many technique to enhance an image to a super-resolution, it reconstruct a higher-resolution image from the lower-resolution images.\n");
+        text_hyperlink = root.findViewById(R.id.text_link);
+        text_hyperlink.setMovementMethod(LinkMovementMethod.getInstance());
 
         text_about_2 = root.findViewById(R.id.text_about_2);
         text_about_2.setText("About Poggers");
