@@ -3,6 +3,7 @@ package id.ac.umn.esrganapp.ui.gallery;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -118,6 +119,12 @@ public class GalleryFragment extends Fragment  implements GalleryRecyclerViewAda
                     File fdelete = new File(s.getPath());
                     if (fdelete.exists()) {
                         if (fdelete.delete()) {
+                            for(GalleryThumbnail a : data){
+                                if (a.getPath() == fdelete.getPath()) {
+                                    data.remove(a);break;
+                                }
+                            }
+                            adapter.notifyDataSetChanged();
                             System.out.println("file Deleted :" + s.getPath());
                         } else {
                             System.out.println("file not Deleted :" + s.getPath());
