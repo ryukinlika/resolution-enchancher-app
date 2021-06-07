@@ -1,5 +1,6 @@
 package id.ac.umn.esrganapp.ui.gallery;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -26,6 +27,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,7 +36,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -131,6 +135,12 @@ public class GalleryFragment extends Fragment implements GalleryRecyclerViewAdap
                     }
                     Log.d("My array list content: ", s.toString());
                     }
+                    Toast.makeText(getContext(), "Delete all Image Successful!!", Toast.LENGTH_SHORT).show();
+                    //remove all selected image from arraylist & set button visibility
+                    ImageDelete.clear();
+                    for(GalleryThumbnail a : data)a.setCheckedFalse();
+                    adapter.notifyDataSetChanged();
+                    deleteButton.setVisibility(View.INVISIBLE);
 //                Fragment currentFragment = getActivity().getSupportFragmentManager().findFragmentById(R.id.recyclerView);
 //                FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
 //                fragmentTransaction.detach(currentFragment);
@@ -324,6 +334,10 @@ public class GalleryFragment extends Fragment implements GalleryRecyclerViewAdap
     }
 
     private void uploadPicture(Uri imageUri, String user_email){
+        ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setTitle("Backing Up all images to Firebase Storage");
+        progressDialog.show();
+
         DatabaseReference pushedItem = databaseImages.push();
         String key = pushedItem.getKey();
         StorageReference Sref = storageReference.child("images/"+key);
@@ -331,22 +345,34 @@ public class GalleryFragment extends Fragment implements GalleryRecyclerViewAdap
         Images image = new Images(user_email,url_image, imageUri.toString());
         pushedItem.setValue(image);
 
+
+
         Sref.putFile(imageUri).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-//                progressDialog.dismiss();
+                progressDialog.dismiss();
                 Toast.makeText(getContext(), "Failed" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
-//        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-//                double progress = (100.0
-//                        * taskSnapshot.getBytesTransferred()
-//                        / taskSnapshot.getTotalByteCount());
-//                progressDialog.setMessage(
-//                        "Uploaded "
-//                                + (int) progress + "%");
-//            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100.0
+                        * taskSnapshot.getBytesTransferred()
+                        / taskSnapshot.getTotalByteCount());
+                progressDialog.setMessage(
+                        "Uploaded "
+                                + (int) progress + "%");
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                progressDialog.dismiss();
+                Toast.makeText(getContext(), "Back up successful!!", Toast.LENGTH_SHORT).show();
+                ImageUris.clear();
+                for(GalleryThumbnail a : data)a.setCheckedFalse();
+                adapter.notifyDataSetChanged();
+                backupButton.setVisibility(View.INVISIBLE);
+            }
         });
     }
 
