@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,6 +77,8 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
                     startActivity(intent);
                 }
             });
+            ImageView img= root.findViewById(R.id.onboarding_logo_app);
+            img.setImageResource(R.drawable.backup);
         }
         else {
             List<String> mainStorageUri = ((MainActivity)getActivity()).getStorageUri();
