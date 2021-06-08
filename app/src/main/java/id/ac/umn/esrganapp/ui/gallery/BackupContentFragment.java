@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,6 +28,9 @@ public class BackupContentFragment extends Fragment {
         onboarding_heading.setText("No Photo have been backed up!!");
         onboarding_body.setText("Start backing up your photo!");
         backupButton.setText("Backup Now");
+
+        ImageView img= root.findViewById(R.id.onboarding_logo_app);
+        img.setImageResource(R.drawable.nobackup);
 
         backupButton.setOnClickListener(new View.OnClickListener() {
             @Override
