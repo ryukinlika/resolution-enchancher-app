@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,23 +27,18 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import id.ac.umn.esrganapp.MainActivity;
@@ -56,9 +52,9 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
     private TextView onboarding_heading, onboarding_body;
     private GalleryRecyclerViewAdapter adapter;
     private List<GalleryThumbnail> data = new ArrayList<>();
-    private boolean isbackup = false;
-    private List<String> ImagePaths = new ArrayList<>();
-    private Button loginButton, backupButton;
+    private boolean isdeleted = false;
+    private List<String> ImageDelete = new ArrayList<String>();
+    private Button loginButton, deleteButton;
     private FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
     // Store all Uris from firebase storage if user already backup some images
     private List<String> StorageUris = new ArrayList<>();
@@ -83,7 +79,7 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
         }
         else {
             List<String> mainStorageUri = ((MainActivity)getActivity()).getStorageUri();
-            Log.d("Main storage uri size", mainStorageUri.get(1));
+            setHasOptionsMenu(true);
             if (mainStorageUri.size() == 0) {
                 root = inflater.inflate(R.layout.fragment_frame, container, false);
                 Fragment backupFragment = new BackupContentFragment();
@@ -97,13 +93,51 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
                 adapter = new GalleryRecyclerViewAdapter(root.getContext(), data);
                 adapter.setClickListener(this);
                 recyclerView.setAdapter(adapter);
-                backupButton = root.findViewById(R.id.backupPhoto);
-
-                backupButton.setOnClickListener(new View.OnClickListener() {
+                deleteButton = root.findViewById(R.id.deleteBackupImages);
+                deleteButton.setOnClickListener(new View.OnClickListener(){
                     @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), LoginActivity.class);
-                        startActivity(intent);
+                    public void onClick(View v){
+                        for (String StoragePath : ImageDelete){
+                            StorageReference Sref = storageReference.child(StoragePath);
+                            Sref.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    // File deleted successfully
+                                    String realKeyName = StoragePath.substring(7);
+
+                                    databaseImages.child(realKeyName).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            for(GalleryThumbnail a : data){
+                                                if (a.getPath() == StoragePath) {
+                                                    data.remove(a);break;
+                                                }
+                                            }
+                                            adapter.notifyDataSetChanged();
+                                            Toast.makeText(getContext(), "Delete all Image Successful!!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    // Uh-oh, an error occurred!
+                                    Toast.makeText(getContext(), "Image failed to be deleted, Pleae try again", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                        //remove all selected image from arraylist & set button visibility
+                        ImageDelete.clear();
+                        for(GalleryThumbnail a : data)a.setCheckedFalse();
+                        adapter.notifyDataSetChanged();
+                        deleteButton.setVisibility(View.INVISIBLE);
+
+//                Fragment currentFragment = getActivity().getSupportFragmentManager().findFragmentById(R.id.recyclerView);
+//                FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
+//                fragmentTransaction.detach(currentFragment);
+//                fragmentTransaction.attach(currentFragment);
+//                fragmentTransaction.commit();
                     }
                 });
                 adapter.notifyDataSetChanged();
@@ -161,28 +195,25 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
 
     @Override
     public void onItemClick(View view, int position) {
-        String path = data.get(position).getPath();
-        Uri uri = Uri.fromFile(new File(path));
-        // if button menu backup selected
-
-//        if(isbackup){
-//            //Check if imageUri already exist in firebase (through ArrayList StorageUris
-//            if(StorageUris.contains(uri.toString())){
-//                Toast.makeText(getContext(),"That Image have already been backed up!", Toast.LENGTH_SHORT).show();
-//            }
-//            //add uri to imageUris and remove if uri already Exist
-//            else if(ImageUris.contains(uri)){
-//                ImageUris.remove(uri);
-//            }else{
-//                ImageUris.add(uri);
-//            }
-//        }
-//        //full size image
-//        else {
+        String keyName = data.get(position).getPath();
+        //if button menu deleted selected
+        if(isdeleted){
+            if(ImageDelete.contains(keyName)){
+                data.get(position).setCheckedFalse();
+                adapter.notifyItemChanged(position);
+                ImageDelete.remove(keyName);
+            }else{
+                data.get(position).setCheckedTrue();
+                adapter.notifyItemChanged(position);
+                ImageDelete.add(keyName);
+            }
+        }
+        //full size image
+        else {
             Intent intent = new Intent(this.getContext(), ViewImageActivity.class);
-            intent.putExtra("backup_image_name", path);
+            intent.putExtra("backup_image_name", keyName);
             startActivity(intent);
-//        }
+        }
     }
 
 
@@ -200,10 +231,15 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu,inflater);
-        MenuItem item = menu.findItem(R.id.backupData);
+        //if backup visible set to false
+        menu.findItem(R.id.backupData).setVisible(false);
+        MenuItem itemDelete = menu.findItem(R.id.deleteImage);
+        MenuItem itemLogout = menu.findItem(R.id.Logout);
         //if logged in, then the backup option will appear
         if(FirebaseAuth.getInstance().getCurrentUser() != null ){
-            item.setVisible(true);
+            if(((MainActivity)getActivity()).getStorageUriSize()>0)
+                itemDelete.setVisible(true);
+            itemLogout.setVisible(true);
         }
     }
 
@@ -212,19 +248,24 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
     public boolean onOptionsItemSelected(MenuItem item){
         switch(item.getItemId()){
             //if backup selected
-            case R.id.backupData:
-                backupButton = getView().findViewById(R.id.backupPhoto);
-                if(isbackup){
+            case R.id.deleteImage:
+                deleteButton = getView().findViewById(R.id.deleteBackupImages);
+                if(isdeleted){
                     //remove all selected image from arraylist & set button visibility
-//                    ImageUris.clear();
-                    backupButton.setVisibility(View.INVISIBLE);
+                    ImageDelete.clear();
+                    for(GalleryThumbnail a : data)a.setCheckedFalse();
+                    adapter.notifyDataSetChanged();
+                    deleteButton.setVisibility(View.INVISIBLE);
                 }
                 else{
-                    //set button invisible if backup canceled
-                    backupButton.setVisibility(View.VISIBLE);
+                    deleteButton.setVisibility(View.VISIBLE);
                 }
-                //flip isbackup everytime menu item is pressed
-                isbackup = !isbackup;
+                isdeleted = !isdeleted;
+                break;
+            case R.id.Logout:
+                FirebaseAuth.getInstance().signOut();
+                Toast.makeText(getContext(), "Logging Out, Returning to Main Page", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getActivity(), MainActivity.class));
                 break;
         }
         return super.onOptionsItemSelected(item);
