@@ -164,7 +164,7 @@ public class GalleryFragment extends Fragment implements GalleryRecyclerViewAdap
         final String appDirectoryName = "PoggersApp";
         File[] imageRoot = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES), appDirectoryName).listFiles(new ImageFileFilter());
-        if(imageRoot.length != 0){
+        if(imageRoot != null && imageRoot.length != 0){
             for (File file : imageRoot) {
                 Bitmap image = BitmapHelper.decodeBitmapFromFile(file.getAbsolutePath(),
                         100,
