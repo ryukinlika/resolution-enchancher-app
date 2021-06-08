@@ -93,7 +93,7 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
                 adapter = new GalleryRecyclerViewAdapter(root.getContext(), data);
                 adapter.setClickListener(this);
                 recyclerView.setAdapter(adapter);
-                deleteButton = root.findViewById(R.id.deleteBackupImages);
+                deleteButton = root.findViewById(R.id.deletePhoto);
                 deleteButton.setOnClickListener(new View.OnClickListener(){
                     @Override
                     public void onClick(View v){
@@ -116,6 +116,15 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
                                             }
                                             adapter.notifyDataSetChanged();
                                             Toast.makeText(getContext(), "Delete all Image Successful!!", Toast.LENGTH_SHORT).show();
+                                            Log.d("Data size", String.valueOf(data.size()));
+                                            if(data.size() == 0){
+//                                                root.setVisibility(View.GONE);
+//                                                View subframe = inflater.inflate(R.layout.fragment_frame, container, false);
+//                                                subframe.setTag(root.getTag());
+//                                                container.addView(subframe);
+                                                Fragment backupFragment = new BackupContentFragment();
+                                                getActivity().getSupportFragmentManager().beginTransaction().add(R.id.fragment_gallery_backup, backupFragment).commit();
+                                            }
                                         }
                                     });
                                 }
@@ -123,7 +132,7 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
                                 @Override
                                 public void onFailure(@NonNull Exception exception) {
                                     // Uh-oh, an error occurred!
-                                    Toast.makeText(getContext(), "Image failed to be deleted, Pleae try again", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Image failed to be deleted, Please try again", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -249,7 +258,7 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
         switch(item.getItemId()){
             //if backup selected
             case R.id.deleteImage:
-                deleteButton = getView().findViewById(R.id.deleteBackupImages);
+                deleteButton = getView().findViewById(R.id.deletePhoto);
                 if(isdeleted){
                     //remove all selected image from arraylist & set button visibility
                     ImageDelete.clear();
