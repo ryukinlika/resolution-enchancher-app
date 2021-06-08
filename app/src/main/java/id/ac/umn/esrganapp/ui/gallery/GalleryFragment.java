@@ -145,6 +145,7 @@ public class GalleryFragment extends Fragment implements GalleryRecyclerViewAdap
                     for(GalleryThumbnail a : data)a.setCheckedFalse();
                     adapter.notifyDataSetChanged();
                     deleteButton.setVisibility(View.INVISIBLE);
+                    isdeleted = false;
 //                Fragment currentFragment = getActivity().getSupportFragmentManager().findFragmentById(R.id.recyclerView);
 //                FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
 //                fragmentTransaction.detach(currentFragment);
@@ -388,6 +389,7 @@ public class GalleryFragment extends Fragment implements GalleryRecyclerViewAdap
                 for(GalleryThumbnail a : data)a.setCheckedFalse();
                 adapter.notifyDataSetChanged();
                 backupButton.setVisibility(View.INVISIBLE);
+                isbackup = false;
             }
         });
     }

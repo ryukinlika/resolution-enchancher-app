@@ -141,6 +141,7 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
                         for(GalleryThumbnail a : data)a.setCheckedFalse();
                         adapter.notifyDataSetChanged();
                         deleteButton.setVisibility(View.INVISIBLE);
+                        isdeleted = false;
 
 //                Fragment currentFragment = getActivity().getSupportFragmentManager().findFragmentById(R.id.recyclerView);
 //                FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
@@ -241,7 +242,8 @@ public class BackupFragment extends Fragment implements GalleryRecyclerViewAdapt
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu,inflater);
         //if backup visible set to false
-        menu.findItem(R.id.backupData).setVisible(false);
+        MenuItem itemBackup = menu.findItem(R.id.backupData);
+        itemBackup.setVisible(false);
         MenuItem itemDelete = menu.findItem(R.id.deleteImage);
         MenuItem itemLogout = menu.findItem(R.id.Logout);
         //if logged in, then the backup option will appear
