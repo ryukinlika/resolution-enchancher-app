@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                     checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                 //permission not granted, need request
-                String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
+                String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
                 //show popup for runtime permission
                 requestPermissions(permissions, PERMISSION_CODE);
             }

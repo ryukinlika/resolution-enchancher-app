@@ -35,11 +35,13 @@
         <activity
             android:name=".ui.auth.RegisterActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".ui.auth.RegisterActivity" />
+            android:parentActivityName=".ui.auth.RegisterActivity"
+            android:noHistory="true"/>
         <activity
             android:name=".ui.auth.LoginActivity"
             android:screenOrientation="portrait"
-            android:parentActivityName=".ui.auth.LoginActivity" />
+            android:parentActivityName=".ui.auth.LoginActivity"
+            android:noHistory="true"/>
         <activity
             android:name=".EnhanceActivity"
             android:screenOrientation="portrait"

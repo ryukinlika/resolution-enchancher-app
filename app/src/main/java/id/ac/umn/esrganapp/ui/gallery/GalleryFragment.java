@@ -138,6 +138,7 @@ public class GalleryFragment extends Fragment implements GalleryRecyclerViewAdap
                             System.out.println("file not Deleted :" + s.getPath());
                         }
                     }
+                    else Log.d("exist", "no");
                     Log.d("My array list content: ", s.toString());
                     }
                     Toast.makeText(getContext(), "Delete all Image Successful!!", Toast.LENGTH_SHORT).show();
