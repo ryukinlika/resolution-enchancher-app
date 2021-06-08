@@ -47,7 +47,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import id.ac.umn.esrganapp.MainActivity;
 import id.ac.umn.esrganapp.R;
+import id.ac.umn.esrganapp.ui.auth.LoginActivity;
 
 public class GalleryFragment extends Fragment implements GalleryRecyclerViewAdapter.ItemClickListener{
 
@@ -231,14 +233,21 @@ public class GalleryFragment extends Fragment implements GalleryRecyclerViewAdap
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu,inflater);
-        MenuItem item = menu.findItem(R.id.backupData);
-        //if logged in, then the backup option will appear
-        if(FirebaseAuth.getInstance().getCurrentUser() != null ){
-            item.setVisible(true);
-        }
-        //show delete image option
+        MenuItem itemBackup = menu.findItem(R.id.backupData);
+        MenuItem itemLogout = menu.findItem(R.id.Logout);
         MenuItem itemDelete = menu.findItem(R.id.deleteImage);
-        itemDelete.setVisible(true);
+        //if logged in, then the logout option will appear
+        if(FirebaseAuth.getInstance().getCurrentUser() != null ){
+            itemLogout.setVisible(true);
+        }
+        //If saved image exist (more than 0) show delete button
+        if(data.size()>0){
+            itemDelete.setVisible(true);
+        }
+        //If saved image exist & logged in, show backup option
+        if(data.size()>0 && FirebaseAuth.getInstance().getCurrentUser() != null){
+            itemBackup.setVisible(true);
+        }
     }
 
     //Function to handle if an item is selected
@@ -291,7 +300,12 @@ public class GalleryFragment extends Fragment implements GalleryRecyclerViewAdap
                 }
                 isdeleted = !isdeleted;
                 break;
+            case R.id.Logout:
+                FirebaseAuth.getInstance().signOut();
+                Toast.makeText(getContext(), "Logging Out, Returning to Main Page", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getActivity(), MainActivity.class));
 
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

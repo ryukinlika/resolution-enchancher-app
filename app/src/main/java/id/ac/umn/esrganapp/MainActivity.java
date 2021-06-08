@@ -171,4 +171,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public List<String> getStorageUri(){return StorageUris;}
+    public int getStorageUriSize(){return StorageUris.size();}
+
 }

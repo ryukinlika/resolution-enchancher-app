@@ -20,10 +20,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.PoggersEsrgan">
-        <activity android:name=".ui.gallery.ViewImageActivity"></activity>
+        <activity android:name=".ui.gallery.ViewImageActivity"
+            android:screenOrientation="portrait"
+        />
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.PoggersEsrgan.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,25 +34,27 @@
         </activity>
         <activity
             android:name=".ui.auth.RegisterActivity"
-            android:parentActivityName=".ui.auth.RegisterActivity"></activity>
+            android:screenOrientation="portrait"
+            android:parentActivityName=".ui.auth.RegisterActivity" />
         <activity
             android:name=".ui.auth.LoginActivity"
-            android:parentActivityName=".ui.auth.LoginActivity"></activity>
+            android:screenOrientation="portrait"
+            android:parentActivityName=".ui.auth.LoginActivity" />
         <activity
             android:name=".EnhanceActivity"
+            android:screenOrientation="portrait"
             android:noHistory="true"
-            android:parentActivityName=".EnhanceOptionActivity"></activity>
+            android:parentActivityName=".EnhanceOptionActivity" />
         <activity
             android:name=".EnhanceOptionActivity"
-            android:parentActivityName=".MainActivity"></activity>
-        <activity android:name=".OnboardingActivity">
-
-            <!-- android:name=".OnboardingActivity" -->
-            <!-- android:label="OnboardingActivity" -->
-            <!-- android:theme="@style/Theme.PoggersEsrgan.NoActionBar" -->
-        </activity>
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".OnboardingActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".SplashActivity"
+            android:screenOrientation="portrait"
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
