@@ -22,7 +22,7 @@ import id.ac.umn.esrganapp.R;
 import id.ac.umn.esrganapp.ui.gallery.GalleryThumbnail;
 
 public class AboutFragment extends Fragment {
-    TextView text_about_1, text_sub_1, text_about_2, text_sub_2, text_hyperlink;
+    TextView text_about_1, text_sub_1,text_sub_1_1, text_about_2, text_sub_2, text_hyperlink;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -34,13 +34,14 @@ public class AboutFragment extends Fragment {
         text_about_1 = root.findViewById(R.id.text_about_1);
         text_about_1.setText("Learn more about ESRGAN");
         text_sub_1 = root.findViewById(R.id.text_sub_1);
-        text_sub_1.setText("\u25CF ESRGAN stand for Enhanced Super-Resolution Generative Adversarial Networks.\n\n" +
-                "\u25CF ESRGAN is one of many technique to enhance an image to a super-resolution, it reconstruct a higher-resolution image from the lower-resolution images.\n");
+        text_sub_1.setText("ESRGAN stand for Enhanced Super-Resolution Generative Adversarial Networks.");
+        text_sub_1_1 = root.findViewById(R.id.text_sub_1_1);
+        text_sub_1_1.setText("ESRGAN is one of many technique to enhance an image to a super-resolution, it reconstruct a higher-resolution image from the lower-resolution images.");
         text_hyperlink = root.findViewById(R.id.text_link);
         text_hyperlink.setMovementMethod(LinkMovementMethod.getInstance());
 
         text_about_2 = root.findViewById(R.id.text_about_2);
-        text_about_2.setText("About Poggers");
+        text_about_2.setText("\nAbout Poggers");
         text_sub_2 = root.findViewById(R.id.text_sub_2);
 
         text_sub_2.setText("Poggers is a group of college students from Universitas Multimedia Nusantara. \n" +

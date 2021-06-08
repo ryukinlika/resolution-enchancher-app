@@ -34,7 +34,7 @@ public class HomeFragment extends Fragment {
         setHasOptionsMenu(true);
 
         text_home = root.findViewById(R.id.text_home);
-        text_home.setText("Image Enhancement by Poggers");
+        text_home.setText("Image Enhancer by Poggers");
 
         sub_text_home = root.findViewById(R.id.sub_text_home);
         sub_text_home.setText("Features");

@@ -6,8 +6,8 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_login"
-            android:icon="@drawable/ic_menu_book"
-            android:title="Login" />
+            android:icon="@drawable/logobackup"
+            android:title="Backup" />
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_menu_home"
