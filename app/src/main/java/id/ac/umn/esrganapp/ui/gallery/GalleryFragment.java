@@ -2,6 +2,7 @@ package id.ac.umn.esrganapp.ui.gallery;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
@@ -355,43 +356,52 @@ public class GalleryFragment extends Fragment implements GalleryRecyclerViewAdap
         progressDialog.setTitle("Backing Up all images to Firebase Storage");
         progressDialog.show();
 
-        DatabaseReference pushedItem = databaseImages.push();
-        String key = pushedItem.getKey();
-        StorageReference Sref = storageReference.child("images/"+key);
-        String url_image = String.valueOf(Sref.getDownloadUrl());
-        Images image = new Images(user_email,url_image, imageUri.toString());
-        pushedItem.setValue(image);
+        File f = new File(imageUri.getPath());
+        long size = f.length(); //size in byte
+        //Log.d("file size is ", String.valueOf(size));
+        if(size > 5 * 1024 * 1024){ // size > 5 MB
+            progressDialog.dismiss();
+            Toast.makeText(getContext(), "File size too large!", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            DatabaseReference pushedItem = databaseImages.push();
+            String key = pushedItem.getKey();
+            StorageReference Sref = storageReference.child("images/"+key);
+            String url_image = String.valueOf(Sref.getDownloadUrl());
+            Images image = new Images(user_email,url_image, imageUri.toString());
+            pushedItem.setValue(image);
 
+        
+            Sref.putFile(imageUri).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    progressDialog.dismiss();
+                    Toast.makeText(getContext(), "Failed" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                    double progress = (100.0
+                            * taskSnapshot.getBytesTransferred()
+                            / taskSnapshot.getTotalByteCount());
+                    progressDialog.setMessage(
+                            "Uploaded "
+                                    + (int) progress + "%");
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    progressDialog.dismiss();
+                    Toast.makeText(getContext(), "Back up successful!!", Toast.LENGTH_SHORT).show();
+                    ImageUris.clear();
+                    for(GalleryThumbnail a : data)a.setCheckedFalse();
+                    adapter.notifyDataSetChanged();
+                    backupButton.setVisibility(View.INVISIBLE);
+                    isbackup = false;
+                }
+            });
+        }
 
-
-        Sref.putFile(imageUri).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                progressDialog.dismiss();
-                Toast.makeText(getContext(), "Failed" + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                double progress = (100.0
-                        * taskSnapshot.getBytesTransferred()
-                        / taskSnapshot.getTotalByteCount());
-                progressDialog.setMessage(
-                        "Uploaded "
-                                + (int) progress + "%");
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                progressDialog.dismiss();
-                Toast.makeText(getContext(), "Back up successful!!", Toast.LENGTH_SHORT).show();
-                ImageUris.clear();
-                for(GalleryThumbnail a : data)a.setCheckedFalse();
-                adapter.notifyDataSetChanged();
-                backupButton.setVisibility(View.INVISIBLE);
-                isbackup = false;
-            }
-        });
     }
 
 

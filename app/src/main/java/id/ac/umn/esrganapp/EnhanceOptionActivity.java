@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -24,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public class EnhanceOptionActivity extends AppCompatActivity {
 
@@ -170,7 +172,22 @@ public class EnhanceOptionActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && requestCode == IMAGE_CODE && chooseimg) {
             //set image to image view
-            gambar.setImageURI(data.getData());
+            Bitmap bitmap = null;
+            int maxHeight = 500;
+            int maxWidth = 500;
+            float scale = 1;
+            Matrix matrix = new Matrix();
+
+
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
+                scale = Math.min(((float)maxHeight / bitmap.getWidth()), ((float)maxWidth / bitmap.getHeight()));
+                matrix.postScale(scale, scale);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //gambar.setImageURI(data.getData());
+            gambar.setImageBitmap(Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true));
             chooseimg = false;
         }
         else if (resultCode == RESULT_OK && requestCode == PERMISSION_CODE && photoimg) {
