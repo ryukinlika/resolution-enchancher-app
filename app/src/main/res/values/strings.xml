@@ -12,5 +12,5 @@
     <string name="menu_gallery">Recent Images</string>
     <string name="menu_about">Learn More</string>
     <string name="menu_floating">Start Enhancing now</string>
-    <string name="hyperlink">● To Read More about ESRGAN, visit <a href="https://medium.com/analytics-vidhya/esrgan-enhanced-super-resolution-gan-96a28821634">https://medium.com/analytics-vidhya/esrgan-enhanced-super-resolution-gan-96a28821634</a></string>
+    <string name="hyperlink">To Read More about ESRGAN, visit <a href="https://medium.com/analytics-vidhya/esrgan-enhanced-super-resolution-gan-96a28821634">https://medium.com/analytics-vidhya/esrgan-enhanced-super-resolution-gan-96a28821634</a></string>
 </resources>
