@@ -80,7 +80,7 @@ public class OnboardingActivity extends AppCompatActivity{
         }
 
         if(mDots.length>0){
-            mDots[position].setTextColor(Color.parseColor("#FFFFFF"));
+            mDots[position].setTextColor(Color.parseColor("#beffad"));
         }
     }
 

@@ -23,16 +23,16 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="130dp"
         android:layout_marginBottom="50dp"
         android:background="@drawable/button"
         android:gravity="center"
-        android:text="Backup dummy"
+        android:text="Backup Image"
         android:visibility="invisible"
         android:textColor="@color/white"
         app:backgroundTint="@android:color/holo_red_light"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <Button
         android:id="@+id/deletePhoto"
@@ -41,7 +41,6 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="130dp"
         android:layout_marginBottom="50dp"
         android:background="@drawable/button"
         android:gravity="center"
@@ -50,6 +49,7 @@
         android:textColor="@color/white"
         app:backgroundTint="@android:color/holo_red_light"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
